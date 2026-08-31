@@ -1,52 +1,96 @@
 package com.websocket;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Client {
 
     public static void main(String[] args) {
-        try {
-            Socket clientSocket = new Socket("localhost", 1234);
 
-            Scanner sc = new Scanner(System.in);
+        try (
+                Socket socket = new Socket("localhost", 1234);
 
-            InputStream input = clientSocket.getInputStream();
-            OutputStream output = clientSocket.getOutputStream();
+                BufferedReader input = new BufferedReader(
+                                new InputStreamReader(
+                                        socket.getInputStream(),
+                                        StandardCharsets.UTF_8
+                                )
+                        );
 
-            byte[] inputBuffer = new byte[1024];
+                PrintWriter output = new PrintWriter(
+                                new OutputStreamWriter(
+                                        socket.getOutputStream(),
+                                        StandardCharsets.UTF_8
+                                ),
+                                true
+                        );
 
-            int dado = input.read(inputBuffer);
+                Scanner scanner = new Scanner(System.in)
+        ) {
 
-            String messageReceive = new String(inputBuffer, 0, dado);
+            // =========================
+            // LOGIN
+            // =========================
 
-            System.out.println(messageReceive);
+            String question = input.readLine();
 
-            String message = sc.nextLine();
+            System.out.println(question);
 
-            output.write(message.getBytes());
+            String name = scanner.nextLine();
 
-            byte[] inputBuffer2 = new byte[1024];
+            output.println(name);
 
-            int dado2 = input.read(inputBuffer2);
 
-            String messageReceive2 = new String(inputBuffer2, 0, dado2);
+            // =========================
+            // THREAD OF RECEIVE
+            // =========================
 
-            System.out.println(messageReceive2);
+            Thread receiveThread = new Thread(() -> {
 
-            String message2 = sc.next();
+                try {
 
-            output.write(message2.getBytes());
+                    String message;
 
-            output.close();
-            input.close();
-            clientSocket.close();
+                    while ((message = input.readLine()) != null) {
 
-            System.out.println("Conexão encerrada");
-        } catch (Exception e) {
-            System.out.println("Error: "+e.getMessage());
+                        System.out.println("\n" + message);
+
+                        System.out.print("> ");
+                    }
+
+                } catch (IOException e) {
+                    System.out.println("Disconnected from server.");
+                }
+
+            });
+
+            receiveThread.start();
+
+
+            // =========================
+            // SENDS MESSAGES
+            // =========================
+
+            while (true) {
+
+                System.out.print("> ");
+
+                String message = scanner.nextLine();
+
+                output.println(message);
+
+                if (message.equalsIgnoreCase("QUIT")) {
+                    break;
+                }
+            }
+
+        } catch (IOException e) {
+
+            System.out.println("Connection error: " + e.getMessage());
         }
+
+        System.out.println("Connection closed.");
     }
 }

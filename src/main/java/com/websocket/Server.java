@@ -9,37 +9,32 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
-    private static ServerSocket server;
-    private static Map<Integer, ClientConnection> clients = new ConcurrentHashMap<>();
-    private static int quantClients = 0;
+    private static int nextClientId = 1;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
-        ServerSocket server = new ServerSocket(1234);
+        ClientManager clientManager = new ClientManager();
 
-        System.out.println("Server running on port 1234");
+        try (ServerSocket server = new ServerSocket(1234)) {
 
-        while (true) {
-            Socket socket = server.accept();
+            System.out.println("Server running on port " + server.getLocalPort());
 
-            Thread thread = new Thread(() -> {
-                try {
-                    handleClient(socket);
-                } catch (IOException e) {
-                    System.err.println("Error: "+e.getMessage());
-                }
-            });
+            while (true) {
 
-            thread.start();
+                Socket socket = server.accept();
+
+                int clientId = nextClientId++;
+
+                ClientHandler handler = new ClientHandler(clientId, socket, clientManager);
+
+                Thread thread = new Thread(handler, "Client-" + clientId);
+
+                thread.start();
+            }
+
+        } catch (IOException e) {
+
+            System.out.println("Server error: " + e.getMessage());
         }
     }
-
-    private static void handleClient(Socket socket) throws IOException {
-        ClientConnection client = new ClientConnection(quantClients, socket);
-
-        clients.put(quantClients, client);
-
-        quantClients++;
-    }
-
 }
