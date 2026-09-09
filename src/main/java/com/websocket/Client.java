@@ -13,26 +13,17 @@ public class Client {
                 Socket socket = new Socket("localhost", 1234);
 
                 BufferedReader input = new BufferedReader(
-                                new InputStreamReader(
-                                        socket.getInputStream(),
-                                        StandardCharsets.UTF_8
-                                )
-                        );
+                        new InputStreamReader(socket.getInputStream(),
+                                StandardCharsets.UTF_8));
 
                 PrintWriter output = new PrintWriter(
-                                new OutputStreamWriter(
-                                        socket.getOutputStream(),
-                                        StandardCharsets.UTF_8
-                                ),
-                                true
-                        );
+                        new OutputStreamWriter(socket.getOutputStream(),
+                                StandardCharsets.UTF_8), true);
 
                 Scanner scanner = new Scanner(System.in)
         ) {
 
-            // =========================
             // LOGIN
-            // =========================
 
             String question = input.readLine();
 
@@ -43,9 +34,7 @@ public class Client {
             output.println(name);
 
 
-            // =========================
             // THREAD OF RECEIVE
-            // =========================
 
             Thread receiveThread = new Thread(() -> {
 
@@ -69,9 +58,7 @@ public class Client {
             receiveThread.start();
 
 
-            // =========================
             // SENDS MESSAGES
-            // =========================
 
             while (true) {
 

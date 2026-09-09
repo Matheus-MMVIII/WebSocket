@@ -13,24 +13,23 @@ public class Protocol {
 
         switch (command) {
 
-            case "LIST":
+            case "LIST" -> {
                 return new Message(Message.Type.LIST);
+            }
 
-            case "QUIT":
+            case "QUIT" -> {
                 return new Message(Message.Type.QUIT);
+            }
 
-            case "BROADCAST":
+            case "BROADCAST" -> {
 
                 if (parts.length < 2) {
                     return new Message(Message.Type.UNKNOWN);
                 }
 
-                return new Message(
-                        Message.Type.BROADCAST, -1,
-                        input.substring("BROADCAST ".length())
-                );
-
-            case "SEND":
+                return new Message(Message.Type.BROADCAST, -1, input.substring("BROADCAST ".length()));
+            }
+            case "SEND" -> {
 
                 if (parts.length < 3) {
                     return new Message(Message.Type.UNKNOWN);
@@ -48,9 +47,11 @@ public class Protocol {
 
                     return new Message(Message.Type.UNKNOWN);
                 }
+            }
 
-            default:
+            default -> {
                 return new Message(Message.Type.UNKNOWN);
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.websocket;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,12 +11,7 @@ public class ClientManager {
 
         clients.put(client.getId(), client);
 
-        System.out.println(
-                "Client connected: "
-                        + client.getId()
-                        + " - "
-                        + client.getName()
-        );
+        System.out.println("Client connected: "+client.getId()+" - "+client.getName());
     }
 
     public void removeClient(int id) {
@@ -26,12 +20,7 @@ public class ClientManager {
 
         if (removed != null) {
 
-            System.out.println(
-                    "Client removed: "
-                            + removed.getId()
-                            + " - "
-                            + removed.getName()
-            );
+            System.out.println("Client removed: "+removed.getId()+" - "+removed.getName());
         }
     }
 
@@ -74,12 +63,7 @@ public class ClientManager {
             return;
         }
 
-        receiver.send(
-                "["
-                        + sender.getName()
-                        + "] "
-                        + content
-        );
+        receiver.send("[" + sender.getName() + "] " + content);
     }
 
     public void broadcast(int senderId, String content) {
@@ -90,11 +74,7 @@ public class ClientManager {
             return;
         }
 
-        String message =
-                "["
-                        + sender.getName()
-                        + "] "
-                        + content;
+        String message = "[" + sender.getName() + "] " + content;
 
         for (ClientHandler client : clients.values()) {
 

@@ -14,7 +14,6 @@ public class ClientHandler implements Runnable {
     private String name;
 
     public ClientHandler(int id, Socket socket, ClientManager clientManager) throws IOException {
-
         this.id = id;
         this.socket = socket;
         this.clientManager = clientManager;
@@ -47,17 +46,14 @@ public class ClientHandler implements Runnable {
 
             while ((message = input.readLine()) != null) {
 
-                Message parsedMessage =
-                        Protocol.parse(message);
+                Message parsedMessage = Protocol.parse(message);
 
                 handleMessage(parsedMessage);
             }
 
         } catch (IOException e) {
 
-            System.out.println(
-                    "Client " + id + " disconnected."
-            );
+            System.out.println("Client " + id + " disconnected.");
 
         } finally {
 
@@ -74,32 +70,15 @@ public class ClientHandler implements Runnable {
 
         switch (message.getType()) {
 
-            case LIST:
-                send(clientManager.getClientsList(id));
-                break;
+            case LIST -> send(clientManager.getClientsList(id));
 
-            case SEND:
-                clientManager.sendMessage(
-                        id,
-                        message.getReceiverId(),
-                        message.getContent()
-                );
-                break;
+            case SEND -> clientManager.sendMessage(id, message.getReceiverId(), message.getContent());
 
-            case BROADCAST:
-                clientManager.broadcast(
-                        id,
-                        message.getContent()
-                );
-                break;
+            case BROADCAST -> clientManager.broadcast(id, message.getContent());
 
-            case QUIT:
-                closeConnection();
-                break;
+            case QUIT -> closeConnection();
 
-            case UNKNOWN:
-                send("Unknown command.");
-                break;
+            case UNKNOWN -> send("Unknown command.");
         }
     }
 
