@@ -74,7 +74,6 @@ public class Client {
             }
 
         } catch (IOException e) {
-
             System.out.println("Connection error: " + e.getMessage());
         }
 

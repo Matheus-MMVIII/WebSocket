@@ -76,6 +76,8 @@ public class ClientHandler implements Runnable {
 
             case BROADCAST -> clientManager.broadcast(id, message.getContent());
 
+            case HELP -> send("Commands:\nLIST\nSEND\nBROADCAST\nHELP\nQUIT");
+
             case QUIT -> closeConnection();
 
             case UNKNOWN -> send("Unknown command.");

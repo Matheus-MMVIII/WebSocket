@@ -6,6 +6,7 @@ public class Message {
         LIST,
         SEND,
         BROADCAST,
+        HELP,
         QUIT,
         UNKNOWN
     }

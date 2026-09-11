@@ -17,6 +17,10 @@ public class Protocol {
                 return new Message(Message.Type.LIST);
             }
 
+            case "HELP" -> {
+                return new Message(Message.Type.HELP);
+            }
+
             case "QUIT" -> {
                 return new Message(Message.Type.QUIT);
             }
