@@ -8,7 +8,8 @@ public class Message {
         BROADCAST,
         HELP,
         QUIT,
-        UNKNOWN
+        UNKNOWN,
+        EXCEPTION
     }
 
     private final Type type;

@@ -36,7 +36,7 @@ public class Protocol {
             case "SEND" -> {
 
                 if (parts.length < 3) {
-                    return new Message(Message.Type.UNKNOWN);
+                    return new Message(Message.Type.EXCEPTION, -1, "The message content is missing.");
                 }
 
                 try {
